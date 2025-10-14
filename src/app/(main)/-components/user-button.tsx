@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "@/contexts/session-provider";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import { Check, LogOutIcon, Monitor, Moon, Sun, UserIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -26,6 +27,7 @@ type UserButtonProps = {
 
 export function UserButton({ className }: UserButtonProps) {
   const { user } = useSession();
+  const queryClient = useQueryClient();
 
   return (
     <DropdownMenu>
@@ -46,7 +48,9 @@ export function UserButton({ className }: UserButtonProps) {
       <DropdownMenuContent>
         <DropdownMenuLabel>Logged in as @{user.username}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <Link href={`users/${user.username}`} className="text-muted-foreground">{user.username}</Link>
+        <Link href={`users/${user.username}`} className="text-muted-foreground">
+          {user.username}
+        </Link>
         <DropdownMenuItem className="cursor-pointer">
           <UserIcon className="mr-2 size-4" />
           Profile
@@ -56,6 +60,7 @@ export function UserButton({ className }: UserButtonProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
+            queryClient.clear();
             logout();
           }}
           className="cursor-pointer"
