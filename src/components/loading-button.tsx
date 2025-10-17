@@ -59,7 +59,13 @@ function LoadingButton({
       {...otherProps}
       disabled={disabled || loading}
     >
-      {loading ? <Loader2 className="size-5 animate-spin" /> : children}
+      {loading ? (
+        <span className="flex items-center gap-2">
+          <Loader2 className="size-5 animate-spin" /> {children}
+        </span>
+      ) : (
+        children
+      )}
     </Comp>
   );
 }

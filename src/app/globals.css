@@ -120,6 +120,10 @@
     @apply bg-background text-foreground;
   }
 
+  button {
+    @apply cursor-pointer hover:cursor-pointer;
+  }
+
   a {
     @apply cursor-pointer hover:underline;
   }
