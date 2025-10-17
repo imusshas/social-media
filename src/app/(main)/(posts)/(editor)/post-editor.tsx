@@ -3,17 +3,19 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import { submitPost } from "@/app/(main)/(posts)/(editor)/actions";
 import { Avatar } from "@/app/(main)/-components/avatar";
 import { useSession } from "@/contexts/session-provider";
-import { Button } from "@/components/ui/button";
 import "@/app/(main)/(posts)/(editor)/styles.css";
 import { useState } from "react";
+import { useSubmitPostMutation } from "@/app/(main)/(posts)/(editor)/mutations";
+import { LoadingButton } from "@/components/loading-button";
 
 export function PostEditor() {
   const { user } = useSession();
 
   const [editorContent, setEditorContent] = useState<string>("");
+
+  const { mutate, isPending } = useSubmitPostMutation();
 
   const editor = useEditor({
     extensions: [
@@ -28,8 +30,11 @@ export function PostEditor() {
   });
 
   async function onsubmit() {
-    await submitPost(editorContent);
-    editor?.commands.clearContent();
+    mutate(editorContent, {
+      onSuccess: () => {
+        editor?.commands.clearContent();
+      },
+    });
   }
 
   return (
@@ -46,13 +51,14 @@ export function PostEditor() {
         />
       </div>
       <div className="flex justify-end">
-        <Button
+        <LoadingButton
           onClick={onsubmit}
-          disabled={!editorContent.trim()}
+          disabled={!editorContent.trim() || isPending}
+          loading={isPending}
           className="min-w-20 cursor-pointer"
         >
           Post
-        </Button>
+        </LoadingButton>
       </div>
     </div>
   );

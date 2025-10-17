@@ -9,7 +9,6 @@ import {
 import kyInstance from "@/lib/ky";
 import { PostsPage } from "@/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
 
 export function ForYouFeed() {
   const {
