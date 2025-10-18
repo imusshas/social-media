@@ -1,8 +1,8 @@
 import { Avatar } from "@/app/(main)/-components/avatar";
+import { FollowButton } from "@/app/(main)/-components/follow-button";
 import { validateRequest } from "@/auth";
-import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
-import { userDataSelect } from "@/lib/types";
+import { getUserDataSelect } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
@@ -21,17 +21,22 @@ export function Sidebar() {
 }
 
 async function Follow() {
-  const { user } = await validateRequest();
+  const { user: loggedInUser } = await validateRequest();
 
-  if (!user) return null;
+  if (!loggedInUser) return null;
 
   const users = await prisma.user.findMany({
     where: {
       NOT: {
-        id: user.id,
+        id: loggedInUser.id,
       },
+      followers: {
+        none: {
+          followerId: loggedInUser.id
+        }
+      }
     },
-    select: userDataSelect,
+    select: getUserDataSelect(loggedInUser.id),
     take: 5,
   });
 
@@ -58,7 +63,15 @@ async function Follow() {
               </p>
             </div>
           </Link>
-          <Button className="cursor-pointer">Follow</Button>
+          <FollowButton
+            userId={user.id}
+            initialState={{
+              followers: user._count.followers,
+              isFollowedByUser: user.followers.some(
+                (follower) => follower.followerId === loggedInUser.id,
+              ),
+            }}
+          />
         </div>
       ))}
     </article>
