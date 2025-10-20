@@ -10,7 +10,7 @@ import kyInstance from "@/lib/ky";
 import { PostsPage } from "@/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-export function ForYouFeed() {
+export function FollowingFeed() {
   const {
     data,
     fetchNextPage,
@@ -19,11 +19,11 @@ export function ForYouFeed() {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["post-feed", "for-you"],
+    queryKey: ["post-feed", "following"],
     queryFn: ({ pageParam }) =>
       kyInstance
         .get(
-          "api/posts/for-you",
+          "api/posts/following",
           pageParam ? { searchParams: { cursor: pageParam } } : {},
         )
         .json<PostsPage>(),
@@ -49,7 +49,7 @@ export function ForYouFeed() {
   if (status === "success" && posts.length === 0 && !hasNextPage) {
     return (
       <h2 className="text-muted-foreground text-center">
-        No one has posted anything yet.
+        No posts found. Start following people to see their posts here.
       </h2>
     );
   }
