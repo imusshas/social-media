@@ -1,5 +1,6 @@
 import { Avatar } from "@/app/(main)/-components/avatar";
 import { FollowButton } from "@/app/(main)/-components/follow-button";
+import { UserTooltip } from "@/app/(main)/-components/user-tooltip";
 import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
 import { getUserDataSelect } from "@/lib/types";
@@ -32,9 +33,9 @@ async function Follow() {
       },
       followers: {
         none: {
-          followerId: loggedInUser.id
-        }
-      }
+          followerId: loggedInUser.id,
+        },
+      },
     },
     select: getUserDataSelect(loggedInUser.id),
     take: 5,
@@ -45,24 +46,26 @@ async function Follow() {
       <h3 className="text-xl font-bold">Follow</h3>
       {users.map((user) => (
         <div key={user.id} className="flex items-center justify-between gap-3">
-          <Link
-            href={`/users/${user.username}`}
-            className="flex items-center gap-3 hover:no-underline"
-          >
-            <Avatar
-              avatarUrl={user.avatarUrl}
-              altText={user.displayName}
-              className="flex-none"
-            />
-            <div>
-              <p className="line-clamp-1 font-semibold break-all hover:underline">
-                {user.displayName}
-              </p>
-              <p className="text-muted-foreground line-clamp-1 break-all">
-                @{user.username}
-              </p>
-            </div>
-          </Link>
+          <UserTooltip user={user}>
+            <Link
+              href={`/users/${user.username}`}
+              className="flex items-center gap-3 hover:no-underline"
+            >
+              <Avatar
+                avatarUrl={user.avatarUrl}
+                altText={user.displayName}
+                className="flex-none"
+              />
+              <div>
+                <p className="line-clamp-1 font-semibold break-all hover:underline">
+                  {user.displayName}
+                </p>
+                <p className="text-muted-foreground line-clamp-1 break-all">
+                  @{user.username}
+                </p>
+              </div>
+            </Link>
+          </UserTooltip>
           <FollowButton
             userId={user.id}
             initialState={{
