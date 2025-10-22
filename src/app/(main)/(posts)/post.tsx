@@ -2,6 +2,7 @@
 
 import { PostMenu } from "@/app/(main)/(posts)/post-menu";
 import { Avatar } from "@/app/(main)/-components/avatar";
+import { Linkify } from "@/app/(main)/-components/linkify";
 import { useSession } from "@/contexts/session-provider";
 import { PostData } from "@/lib/types";
 import { formatRelativeDate } from "@/lib/utils";
@@ -36,10 +37,15 @@ export function Post({ post }: PostProps) {
           </div>
         </div>
         {post.user.id === user.id ? (
-          <PostMenu post={post} className="opacity-0 transition-opacity group-hover/post:opacity-100" />
+          <PostMenu
+            post={post}
+            className="group-hover/post:opacity-100 opacity-0 transition-opacity"
+          />
         ) : null}
       </div>
-      <p className="break-words whitespace-pre-line">{post.content}</p>
+      <Linkify>
+        <p className="break-words whitespace-pre-line">{post.content}</p>
+      </Linkify>
     </article>
   );
 }

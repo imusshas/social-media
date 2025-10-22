@@ -1,6 +1,7 @@
 import { Avatar } from "@/app/(main)/-components/avatar";
 import { FollowButton } from "@/app/(main)/-components/follow-button";
 import { FollowerCount } from "@/app/(main)/-components/follower-count";
+import { Linkify } from "@/app/(main)/-components/linkify";
 import { Sidebar } from "@/app/(main)/-components/side-bar";
 import { UserPostsFeed } from "@/app/(main)/users/[username]/user-posts-feed";
 import { validateRequest } from "@/auth";
@@ -121,9 +122,11 @@ async function Profile({ user, loggedInUserId }: ProfileProps) {
       {user.bio ? (
         <>
           <hr />
-          <p className="overflow-hidden break-words whitespace-pre-line">
-            {user.bio}
-          </p>
+          <Linkify>
+            <p className="overflow-hidden break-words whitespace-pre-line">
+              {user.bio}
+            </p>
+          </Linkify>
         </>
       ) : null}
     </div>

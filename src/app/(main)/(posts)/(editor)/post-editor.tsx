@@ -25,7 +25,13 @@ export function PostEditor() {
     immediatelyRender: false,
     content: editorContent,
     onUpdate: ({ editor }) => {
-      setEditorContent(editor.getText());
+      setEditorContent(
+        editor
+          .getHTML()
+          .slice(3)
+          .replaceAll("<p>", "\n")
+          .replaceAll("</p>", ""),
+      );
     },
   });
 
