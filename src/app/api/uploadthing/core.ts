@@ -1,16 +1,16 @@
-import { useSession } from "@/contexts/session-provider";
+import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
 import { createUploadthing, FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
+import { UploadThingError, UTApi } from "uploadthing/server";
 
 const f = createUploadthing();
 
 export const fileRouter = {
   avatar: f({
-    image: { maxFileSize: "512KB" },
+    image: { maxFileSize: "4MB" },
   })
     .middleware(async () => {
-      const { user } = useSession();
+      const { user } = await validateRequest();
 
       if (!user) {
         throw new UploadThingError("Unauthorized");
@@ -19,17 +19,28 @@ export const fileRouter = {
       return { user };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      const newAvatarUrl = file.url.replace(
-        `/f`,
-        `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}`,
-      );
+      try {
+        const oldAvatarUrl = metadata.user.avatarUrl;
 
-      await prisma.user.update({
-        where: { id: metadata.user.id },
-        data: { avatarUrl: newAvatarUrl },
-      });
+        if (oldAvatarUrl) {
+          const key = oldAvatarUrl.split(
+            `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`,
+          )[1];
 
-      return { avatarUrl: newAvatarUrl };
+          await new UTApi().deleteFiles(key);
+        }
+
+        const newAvatarUrl = file.ufsUrl;
+
+        await prisma.user.update({
+          where: { id: metadata.user.id },
+          data: { avatarUrl: newAvatarUrl },
+        });
+
+        return { avatarUrl: newAvatarUrl };
+      } catch (error) {
+        console.error(error);
+      }
     }),
 } satisfies FileRouter;
 

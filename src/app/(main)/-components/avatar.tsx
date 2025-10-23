@@ -17,9 +17,10 @@ export function Avatar({ avatarUrl, altText, size, className }: AvatarProps) {
       width={size ?? 48}
       height={size ?? 48}
       className={cn(
-        "bg-muted-foreground aspect-square h-fit flex-none rounded-full object-cover",
+        "bg-muted-foreground border-foreground aspect-square h-fit flex-none rounded-full border object-cover",
         className,
       )}
+      priority
     />
   );
 }
