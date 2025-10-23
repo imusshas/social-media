@@ -3,9 +3,9 @@ import { FollowButton } from "@/app/(main)/-components/follow-button";
 import { FollowerCount } from "@/app/(main)/-components/follower-count";
 import { Linkify } from "@/app/(main)/-components/linkify";
 import { Sidebar } from "@/app/(main)/-components/side-bar";
+import { EditProfileButton } from "@/app/(main)/users/[username]/edit-profile-button";
 import { UserPostsFeed } from "@/app/(main)/users/[username]/user-posts-feed";
 import { validateRequest } from "@/auth";
-import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 import { FollowerInfo, getUserDataSelect, UserData } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
@@ -114,7 +114,7 @@ async function Profile({ user, loggedInUserId }: ProfileProps) {
           </div>
         </div>
         {user.id === loggedInUserId ? (
-          <Button>Edit Profile</Button>
+          <EditProfileButton user={user} />
         ) : (
           <FollowButton userId={user.id} initialState={followerInfo} />
         )}
