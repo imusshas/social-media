@@ -58,7 +58,10 @@ export function LikeButton({ postId, initialState }: LikeButtonProps) {
   });
 
   return (
-    <button onClick={() => mutate()} className="flex items-center gap-2">
+    <button
+      onClick={() => mutate()}
+      className="flex flex-1 items-center justify-center gap-2 border-r p-3"
+    >
       <Heart
         className={cn(
           "size-5",

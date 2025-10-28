@@ -11,6 +11,7 @@ import { Media } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { LikeButton } from "@/app/(main)/-components/like-button";
+import { BookmarkButton } from "@/app/(main)/-components/bookmark-button";
 
 type PostProps = {
   post: PostData;
@@ -19,54 +20,70 @@ export function Post({ post }: PostProps) {
   const { user: loggedInUser } = useSession();
 
   return (
-    <article className="group/post bg-card space-y-3 rounded-2xl p-5 shadow-sm">
-      <div className="flex justify-between gap-3">
-        <div className="flex flex-wrap gap-3">
-          <UserTooltip user={post.user}>
-            <Link href={`/users/${post.user.username}`}>
-              <Avatar
-                avatarUrl={post.user.avatarUrl}
-                altText={post.user.username}
-              />
-            </Link>
-          </UserTooltip>
-
-          <div className="flex flex-col">
+    <article className="group/post bg-card rounded-2xl shadow-sm">
+      <div className="space-y-3 p-5">
+        <div className="flex justify-between gap-3">
+          <div className="flex flex-wrap gap-3">
             <UserTooltip user={post.user}>
               <Link href={`/users/${post.user.username}`}>
-                <h2 className="font-medium">{post.user.displayName}</h2>
+                <Avatar
+                  avatarUrl={post.user.avatarUrl}
+                  altText={post.user.username}
+                />
               </Link>
             </UserTooltip>
-            <Link
-              href={`/posts/${post.id}`}
-              className="text-muted-foreground text-sm"
-              suppressHydrationWarning
-            >
-              {formatRelativeDate(post.createdAt)}
-            </Link>
+
+            <div className="flex flex-col">
+              <UserTooltip user={post.user}>
+                <Link href={`/users/${post.user.username}`}>
+                  <h2 className="font-medium">{post.user.displayName}</h2>
+                </Link>
+              </UserTooltip>
+              <Link
+                href={`/posts/${post.id}`}
+                className="text-muted-foreground text-sm"
+                suppressHydrationWarning
+              >
+                {formatRelativeDate(post.createdAt)}
+              </Link>
+            </div>
           </div>
+          {post.user.id === loggedInUser.id ? (
+            <PostMenu
+              post={post}
+              className="opacity-0 transition-opacity group-hover/post:opacity-100"
+            />
+          ) : null}
         </div>
-        {post.user.id === loggedInUser.id ? (
-          <PostMenu
-            post={post}
-            className="opacity-0 transition-opacity group-hover/post:opacity-100"
-          />
+        <Linkify>
+          <p className="break-words whitespace-pre-line">{post.content}</p>
+        </Linkify>
+        {!!post.attachments ? (
+          <MediaPreviews attachments={post.attachments} />
         ) : null}
       </div>
-      <Linkify>
-        <p className="break-words whitespace-pre-line">{post.content}</p>
-      </Linkify>
-      {!!post.attachments ? (
-        <MediaPreviews attachments={post.attachments} />
-      ) : null}
-      <hr className="text-muted-foreground" />
-      <LikeButton
-        postId={post.id}
-        initialState={{
-          likes: post._count.likes,
-          isLikedByUser: post.likes.some((like) => like.userId === loggedInUser.id),
-        }}
-      />
+      <div>
+        <hr className="text-muted-foreground" />
+        <div className="flex items-center justify-between">
+          <LikeButton
+            postId={post.id}
+            initialState={{
+              likes: post._count.likes,
+              isLikedByUser: post.likes.some(
+                (like) => like.userId === loggedInUser.id,
+              ),
+            }}
+          />
+          <BookmarkButton
+            postId={post.id}
+            initialState={{
+              isBookmarkedByUser: post.bookmarks.some(
+                (bookmark) => bookmark.userId === loggedInUser.id,
+              ),
+            }}
+          />
+        </div>
+      </div>
     </article>
   );
 }
