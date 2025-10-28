@@ -6,7 +6,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { Avatar } from "@/app/(main)/-components/avatar";
 import { useSession } from "@/contexts/session-provider";
 import "@/app/(main)/(posts)/(editor)/styles.css";
-import { useRef, useState } from "react";
+import { ClipboardEvent, useRef, useState } from "react";
 import { useSubmitPostMutation } from "@/app/(main)/(posts)/(editor)/mutations";
 import { LoadingButton } from "@/components/loading-button";
 import {
@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { ImageIcon, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useDropzone } from "@uploadthing/react";
 
 export function PostEditor() {
   const { user } = useSession();
@@ -33,6 +34,12 @@ export function PostEditor() {
     removeAttachment,
     reset: resetMediaUploads,
   } = useMediaUpload();
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: startUpload,
+  });
+
+  const { onClick, ...rootProps } = getRootProps();
 
   const editor = useEditor({
     extensions: [
@@ -67,6 +74,14 @@ export function PostEditor() {
     );
   }
 
+  function onPaste(e: ClipboardEvent<HTMLInputElement>) {
+    const files = Array.from(e.clipboardData.items)
+      .filter((item) => item.kind === "file")
+      .map((item) => item.getAsFile()) as File[];
+
+    startUpload(files);
+  }
+
   return (
     <div className="bg-card flex flex-col gap-5 rounded-2xl p-5">
       <div className="flex gap-5">
@@ -75,10 +90,17 @@ export function PostEditor() {
           altText={user.displayName}
           className="hidden sm:inline"
         />
-        <EditorContent
-          editor={editor}
-          className="dark:bg-input/30 border-input max-h-[20rem] w-full min-w-0 overflow-y-auto rounded-md border bg-transparent p-3 text-base shadow-xs transition-[color,box-shadow] outline-none"
-        />
+        <div {...rootProps} className="w-full">
+          <input {...getInputProps()} />
+          <EditorContent
+            editor={editor}
+            className={cn(
+              "dark:bg-input/30 border-input max-h-[20rem] w-full overflow-y-auto rounded-md border bg-transparent p-3 text-base shadow-xs transition-[color,box-shadow] outline-none",
+              isDragActive ? "outline-dashed" : null,
+            )}
+            onPaste={onPaste}
+          />
+        </div>
       </div>
       {!!attachments.length ? (
         <AttachmentPreviews
