@@ -1,4 +1,4 @@
-import { deletePost } from "@/app/(main)/(posts)/actions";
+import { deletePost } from "@/app/(main)/posts/actions";
 import { PostsPage } from "@/lib/types";
 import {
   InfiniteData,
@@ -38,8 +38,7 @@ export function useDeletePostMutation() {
       toast.success("Post deleted");
 
       if (pathName === `/posts/${deletedPost.id}`) {
-        // router.push(`/users/${deletedPost.user.username}`);
-        router.push(`/`);
+        router.push(`/users/${deletedPost.user.username}`);
       }
     },
     onError: () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { PostMenu } from "@/app/(main)/(posts)/post-menu";
+import { PostMenu } from "@/app/(main)/posts/post-menu";
 import { Avatar } from "@/app/(main)/-components/avatar";
 import { Linkify } from "@/app/(main)/-components/linkify";
 import { UserTooltip } from "@/app/(main)/-components/user-tooltip";
@@ -39,6 +39,7 @@ export function Post({ post }: PostProps) {
             <Link
               href={`/posts/${post.id}`}
               className="text-muted-foreground text-sm"
+              suppressHydrationWarning
             >
               {formatRelativeDate(post.createdAt)}
             </Link>

@@ -1,4 +1,4 @@
-import { PostEditor } from "@/app/(main)/(posts)/(editor)/post-editor";
+import { PostEditor } from "@/app/(main)/posts/(editor)/post-editor";
 import { FollowingFeed } from "@/app/(main)/-components/following-feed";
 import { ForYouFeed } from "@/app/(main)/-components/for-you-feed";
 import { Sidebar } from "@/app/(main)/-components/side-bar";

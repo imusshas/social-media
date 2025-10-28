@@ -1,4 +1,4 @@
-import { submitPost } from "@/app/(main)/(posts)/(editor)/actions";
+import { submitPost } from "@/app/(main)/posts/(editor)/actions";
 import { useSession } from "@/contexts/session-provider";
 import { PostsPage } from "@/lib/types";
 import {

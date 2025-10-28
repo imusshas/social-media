@@ -1,6 +1,6 @@
 "use client";
 
-import { Post } from "@/app/(main)/(posts)/post";
+import { Post } from "@/app/(main)/posts/post";
 import { InfiniteScrollContainer } from "@/app/(main)/-components/infinite-scroll-container";
 import {
   PostLoadingSkeleton,

@@ -1,4 +1,4 @@
-import { useDeletePostMutation } from "@/app/(main)/(posts)/mutations";
+import { useDeletePostMutation } from "@/app/(main)/posts/mutations";
 import { LoadingButton } from "@/components/loading-button";
 import { Button } from "@/components/ui/button";
 import {

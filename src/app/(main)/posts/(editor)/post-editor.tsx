@@ -5,14 +5,14 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import { Avatar } from "@/app/(main)/-components/avatar";
 import { useSession } from "@/contexts/session-provider";
-import "@/app/(main)/(posts)/(editor)/styles.css";
+import "@/app/(main)/posts/(editor)/styles.css";
 import { ClipboardEvent, useRef, useState } from "react";
-import { useSubmitPostMutation } from "@/app/(main)/(posts)/(editor)/mutations";
+import { useSubmitPostMutation } from "@/app/(main)/posts/(editor)/mutations";
 import { LoadingButton } from "@/components/loading-button";
 import {
   Attachment,
   useMediaUpload,
-} from "@/app/(main)/(posts)/(editor)/use-media-upload";
+} from "@/app/(main)/posts/(editor)/use-media-upload";
 import { Button } from "@/components/ui/button";
 import { ImageIcon, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";

@@ -1,4 +1,4 @@
-import { DeletePostDialog } from "@/app/(main)/(posts)/delete-post-dialog";
+import { DeletePostDialog } from "@/app/(main)/posts/delete-post-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
