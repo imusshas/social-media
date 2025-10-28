@@ -10,12 +10,13 @@ import { cn, formatRelativeDate } from "@/lib/utils";
 import { Media } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import { LikeButton } from "@/app/(main)/-components/like-button";
 
 type PostProps = {
   post: PostData;
 };
 export function Post({ post }: PostProps) {
-  const { user } = useSession();
+  const { user: loggedInUser } = useSession();
 
   return (
     <article className="group/post bg-card space-y-3 rounded-2xl p-5 shadow-sm">
@@ -45,7 +46,7 @@ export function Post({ post }: PostProps) {
             </Link>
           </div>
         </div>
-        {post.user.id === user.id ? (
+        {post.user.id === loggedInUser.id ? (
           <PostMenu
             post={post}
             className="opacity-0 transition-opacity group-hover/post:opacity-100"
@@ -58,6 +59,14 @@ export function Post({ post }: PostProps) {
       {!!post.attachments ? (
         <MediaPreviews attachments={post.attachments} />
       ) : null}
+      <hr className="text-muted-foreground" />
+      <LikeButton
+        postId={post.id}
+        initialState={{
+          likes: post._count.likes,
+          isLikedByUser: post.likes.some((like) => like.userId === loggedInUser.id),
+        }}
+      />
     </article>
   );
 }
