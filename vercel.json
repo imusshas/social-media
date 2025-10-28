@@ -1,0 +1,8 @@
+{
+  "corns": [
+    {
+      "path": "/api/clear-uploads",
+      "schedule": "0 2 * * *"
+    }
+  ]
+}
