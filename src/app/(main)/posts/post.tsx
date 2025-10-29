@@ -12,12 +12,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { LikeButton } from "@/app/(main)/-components/like-button";
 import { BookmarkButton } from "@/app/(main)/-components/bookmark-button";
+import { useState } from "react";
+import { MessageSquare } from "lucide-react";
+import { Comments } from "@/app/(main)/posts/(comments)/comments";
 
 type PostProps = {
   post: PostData;
 };
 export function Post({ post }: PostProps) {
   const { user: loggedInUser } = useSession();
+  const [showComments, setShowComments] = useState<boolean>(false);
 
   return (
     <article className="group/post bg-card rounded-2xl shadow-sm">
@@ -62,7 +66,7 @@ export function Post({ post }: PostProps) {
           <MediaPreviews attachments={post.attachments} />
         ) : null}
       </div>
-      <div>
+      <div className={showComments ? "border-b" : ""}>
         <hr className="text-muted-foreground" />
         <div className="flex items-center justify-between">
           <LikeButton
@@ -74,6 +78,10 @@ export function Post({ post }: PostProps) {
               ),
             }}
           />
+          <CommentsButton
+            post={post}
+            onClick={() => setShowComments((prev) => !prev)}
+          />
           <BookmarkButton
             postId={post.id}
             initialState={{
@@ -84,6 +92,7 @@ export function Post({ post }: PostProps) {
           />
         </div>
       </div>
+      {showComments ? <Comments post={post} /> : null}
     </article>
   );
 }
@@ -130,5 +139,27 @@ function MediaPreview({ media }: MediaPreviewProps) {
         <source src={media.url} />
       </video>
     </div>
+  );
+}
+
+type CommentsButtonProps = {
+  post: PostData;
+  onClick: () => void;
+};
+
+function CommentsButton({ post, onClick }: CommentsButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex flex-1 items-center justify-center gap-2 border-r p-3"
+    >
+      <MessageSquare className="size-5" />
+      <span className="text-sm font-medium tabular-nums">
+        {post._count.comments}{" "}
+        <span className="hidden sm:inline">
+          {post._count.comments === 1 ? "Comment" : "Comments"}
+        </span>
+      </span>
+    </button>
   );
 }
