@@ -53,19 +53,44 @@ export async function POST(
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    await prisma.like.upsert({
+    const post = await prisma.post.findUnique({
       where: {
-        userId_postId: {
+        id: postId,
+      },
+    });
+
+    if (!post) {
+      return Response.json({ error: "Liked post not found" }, { status: 404 });
+    }
+
+    await prisma.$transaction([
+      prisma.like.upsert({
+        where: {
+          userId_postId: {
+            userId: loggedInUser.id,
+            postId: postId,
+          },
+        },
+        create: {
           userId: loggedInUser.id,
           postId: postId,
         },
-      },
-      create: {
-        userId: loggedInUser.id,
-        postId: postId,
-      },
-      update: {},
-    });
+        update: {},
+      }),
+
+      ...(loggedInUser.id !== post.userId
+        ? [
+            prisma.notification.create({
+              data: {
+                issuerId: loggedInUser.id,
+                recipientId: post.userId,
+                postId: post.id,
+                type: "LIKE",
+              },
+            }),
+          ]
+        : []),
+    ]);
 
     return new Response();
   } catch (error) {
@@ -84,6 +109,34 @@ export async function DELETE(
     if (!loggedInUser) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const post = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+
+    if (!post) {
+      return Response.json({ error: "Liked post not found" }, { status: 404 });
+    }
+
+    await prisma.$transaction([
+      prisma.like.deleteMany({
+        where: {
+          userId: loggedInUser.id,
+          postId: postId,
+        },
+      }),
+
+      prisma.notification.deleteMany({
+        where: {
+          issuerId: loggedInUser.id,
+          recipientId: post.userId,
+          postId: postId,
+          type: "LIKE",
+        },
+      }),
+    ]);
 
     await prisma.like.deleteMany({
       where: {

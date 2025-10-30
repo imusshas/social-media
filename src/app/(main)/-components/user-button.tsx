@@ -48,12 +48,17 @@ export function UserButton({ className }: UserButtonProps) {
       <DropdownMenuContent>
         <DropdownMenuLabel>Logged in as @{user.username}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <Link href={`users/${user.username}`} className="text-muted-foreground">
+        <Link href={`/users/${user.username}`} className="text-muted-foreground">
           {user.username}
         </Link>
         <DropdownMenuItem className="cursor-pointer">
-          <UserIcon className="mr-2 size-4" />
-          Profile
+          <Link
+            href={`/users/${user.username}`}
+            className="flex items-center gap-2 hover:no-underline"
+          >
+            <UserIcon className="mr-2 size-4" />
+            Profile
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <ThemeDropdown />

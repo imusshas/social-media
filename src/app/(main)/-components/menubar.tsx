@@ -1,5 +1,8 @@
+import { NotificationsButton } from "@/app/(main)/-components/notifications-button";
+import { validateRequest } from "@/auth";
 import { Button } from "@/components/ui/button";
-import { Bell, Bookmark, HomeIcon, Mail } from "lucide-react";
+import prisma from "@/lib/prisma";
+import { Bookmark, HomeIcon, Mail } from "lucide-react";
 import Link from "next/link";
 
 type MenubarProps = {
@@ -7,26 +10,31 @@ type MenubarProps = {
   asFooter?: boolean;
 };
 
-export function Menubar({ className, asFooter }: MenubarProps) {
+export async function Menubar({ className, asFooter }: MenubarProps) {
+  const { user } = await validateRequest();
+
+  if (!user) {
+    return null;
+  }
+
+  const unreadCount = await prisma.notification.count({
+    where: {
+      recipientId: user.id,
+      read: false,
+    },
+  });
+
   const content = asFooter ? (
     <footer className={className}>
       <MenubarItem href="/" icon={<HomeIcon />} title="Home" />
-      <MenubarItem
-        href="/notifications"
-        icon={<Bell />}
-        title="Notifications"
-      />
+      <NotificationsButton initialState={{ unreadCount }} />
       <MenubarItem href="/messages" icon={<Mail />} title="Messages" />
       <MenubarItem href="bookmarks" icon={<Bookmark />} title="Bookmarks" />
     </footer>
   ) : (
     <aside className={className}>
       <MenubarItem href="/" icon={<HomeIcon />} title="Home" />
-      <MenubarItem
-        href="/notifications"
-        icon={<Bell />}
-        title="Notifications"
-      />
+      <NotificationsButton initialState={{ unreadCount }} />
       <MenubarItem href="/messages" icon={<Mail />} title="Messages" />
       <MenubarItem href="bookmarks" icon={<Bookmark />} title="Bookmarks" />
     </aside>

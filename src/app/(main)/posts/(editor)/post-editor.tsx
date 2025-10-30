@@ -39,6 +39,7 @@ export function PostEditor() {
     onDrop: startUpload,
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { onClick, ...rootProps } = getRootProps();
 
   const editor = useEditor({
@@ -51,10 +52,10 @@ export function PostEditor() {
     onUpdate: ({ editor }) => {
       setEditorContent(
         editor
-          .getHTML()
-          .slice(3)
-          .replaceAll("<p>", "\n")
-          .replaceAll("</p>", ""),
+          .getText()
+          .replace(/\n{3,}/g, "\n")
+          .trimEnd()
+          .trimStart(),
       );
     },
   });
@@ -74,7 +75,7 @@ export function PostEditor() {
     );
   }
 
-  function onPaste(e: ClipboardEvent<HTMLInputElement>) {
+  function onPaste(e: ClipboardEvent<HTMLDivElement>) {
     const files = Array.from(e.clipboardData.items)
       .filter((item) => item.kind === "file")
       .map((item) => item.getAsFile()) as File[];
@@ -209,7 +210,7 @@ function AttachmentPreview({
   attachment,
   onRemoveClick,
 }: AttachmentPreviewProps) {
-  const { file, mediaId, isUploading } = attachment;
+  const { file, isUploading } = attachment;
   const src = URL.createObjectURL(file);
 
   return (
@@ -235,7 +236,7 @@ function AttachmentPreview({
       {!isUploading ? (
         <button
           onClick={onRemoveClick}
-          className="bg-foreground text-background hover:bg-background/60 absolute top-3 right-3 rounded-full p-1.5 transition-colors"
+          className="bg-foreground text-background hover:bg-foreground/60 absolute top-3 right-3 rounded-full p-1.5 transition-colors"
         >
           <X size={20} />
         </button>

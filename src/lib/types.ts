@@ -68,6 +68,30 @@ export type CommentsPage = {
   previousCursor: string | null;
 };
 
+export const notificationIncludes = {
+  issuer: {
+    select: {
+      username: true,
+      displayName: true,
+      avatarUrl: true,
+    },
+  },
+  post: {
+    select: {
+      content: true,
+    },
+  },
+} satisfies Prisma.NotificationInclude;
+
+export type NotificationData = Prisma.NotificationGetPayload<{
+  include: typeof notificationIncludes;
+}>;
+
+export type NotificationsPage = {
+  notifications: NotificationData[];
+  nextCursor: string | null;
+};
+
 export type FollowerInfo = {
   followers: number;
   isFollowedByUser: boolean;
@@ -80,4 +104,8 @@ export type LikeInfo = {
 
 export type BookmarkInfo = {
   isBookmarkedByUser: boolean;
+};
+
+export type NotificationCountInfo = {
+  unreadCount: number;
 };
