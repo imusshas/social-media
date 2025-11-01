@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 
 type SearchProps = {
   className?: string;
@@ -10,6 +11,7 @@ type SearchProps = {
 
 export function Search({ className }: SearchProps) {
   const router = useRouter();
+  const ref = useRef<HTMLInputElement>(null);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -20,6 +22,10 @@ export function Search({ className }: SearchProps) {
       return;
     }
 
+    if (ref.current) {
+      ref.current.value = "";
+      ref.current.blur();
+    }
     router.push(`/search?q=${encodeURIComponent(q)}`);
   }
 
@@ -27,6 +33,7 @@ export function Search({ className }: SearchProps) {
     <form onSubmit={handleSubmit} method="GET" action={"/search"}>
       <div className="relative">
         <input
+          ref={ref}
           type="search"
           data-slot="input"
           name="q"
