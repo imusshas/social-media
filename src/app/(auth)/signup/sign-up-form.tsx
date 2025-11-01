@@ -51,7 +51,11 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="example_me" />
+                <Input
+                  {...field}
+                  placeholder="example_me"
+                  id="signup-username"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -69,6 +73,7 @@ export function SignUpForm() {
                   {...field}
                   type="email"
                   placeholder="example@example.com"
+                  id="signup-password"
                 />
               </FormControl>
               <FormMessage />
@@ -83,7 +88,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <PasswordInput {...field} />
+                <PasswordInput {...field} id="signup-password" />
               </FormControl>
               <FormMessage />
             </FormItem>

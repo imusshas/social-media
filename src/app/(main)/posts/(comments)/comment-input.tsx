@@ -38,6 +38,7 @@ export function CommentInput({ post, disabled }: CommentInputProps) {
         onChange={(e) => setInput(e.target.value)}
         autoComplete="off"
         placeholder="Write a comment ..."
+        id="comment"
         autoFocus
       />
 

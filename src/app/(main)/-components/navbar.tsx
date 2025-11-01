@@ -12,7 +12,7 @@ export function Navbar() {
         >
           Social Media
         </Link>
-        <Search />
+        {/* <Search /> */}
         <UserButton className="sm:ml-auto" />
       </nav>
     </header>

@@ -50,7 +50,7 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="example_me" />
+                <Input {...field} placeholder="example_me" id="login-username" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -64,7 +64,7 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <PasswordInput {...field} />
+                <PasswordInput {...field} id="login-password" />
               </FormControl>
               <FormMessage />
             </FormItem>

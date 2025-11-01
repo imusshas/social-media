@@ -1,8 +1,10 @@
+import { MessagesButton } from "@/app/(main)/-components/messages-button";
 import { NotificationsButton } from "@/app/(main)/-components/notifications-button";
 import { validateRequest } from "@/auth";
 import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
-import { Bookmark, HomeIcon, Mail } from "lucide-react";
+import streamServerClient from "@/lib/stream";
+import { Bookmark, HomeIcon } from "lucide-react";
 import Link from "next/link";
 
 type MenubarProps = {
@@ -17,25 +19,32 @@ export async function Menubar({ className, asFooter }: MenubarProps) {
     return null;
   }
 
-  const unreadCount = await prisma.notification.count({
-    where: {
-      recipientId: user.id,
-      read: false,
-    },
-  });
+  const [unreadNotificationCount, unreadMessageCount] = await Promise.all([
+    prisma.notification.count({
+      where: {
+        recipientId: user.id,
+        read: false,
+      },
+    }),
+    (await streamServerClient.getUnreadCount(user.id)).total_unread_count,
+  ]);
 
   const content = asFooter ? (
     <footer className={className}>
       <MenubarItem href="/" icon={<HomeIcon />} title="Home" />
-      <NotificationsButton initialState={{ unreadCount }} />
-      <MenubarItem href="/messages" icon={<Mail />} title="Messages" />
+      <NotificationsButton
+        initialState={{ unreadCount: unreadNotificationCount }}
+      />
+      <MessagesButton initialState={{ unreadCount: unreadMessageCount }} />
       <MenubarItem href="bookmarks" icon={<Bookmark />} title="Bookmarks" />
     </footer>
   ) : (
     <aside className={className}>
       <MenubarItem href="/" icon={<HomeIcon />} title="Home" />
-      <NotificationsButton initialState={{ unreadCount }} />
-      <MenubarItem href="/messages" icon={<Mail />} title="Messages" />
+      <NotificationsButton
+        initialState={{ unreadCount: unreadNotificationCount }}
+      />
+      <MessagesButton initialState={{ unreadCount: unreadMessageCount }} />
       <MenubarItem href="bookmarks" icon={<Bookmark />} title="Bookmarks" />
     </aside>
   );

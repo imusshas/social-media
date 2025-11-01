@@ -30,6 +30,7 @@ export function Search({ className }: SearchProps) {
           type="search"
           data-slot="input"
           name="q"
+          id="search"
           className={cn(
             "dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 pr-6 text-base shadow-xs transition-[color,box-shadow] outline-none",
             className,

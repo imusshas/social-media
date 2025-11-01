@@ -92,7 +92,7 @@ export function PostEditor() {
           className="hidden sm:inline"
         />
         <div {...rootProps} className="w-full">
-          <input {...getInputProps()} />
+          <input {...getInputProps()} id="upload-post-media" />
           <EditorContent
             editor={editor}
             className={cn(
@@ -156,6 +156,7 @@ function AddAttachmentButton({
         <ImageIcon size={20} />
         <input
           type="file"
+          name="post-media-input"
           accept="image/*, video/*"
           multiple
           ref={fileInputRef}

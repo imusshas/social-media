@@ -99,7 +99,7 @@ export function EditProfileDialog({
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="John Doe" />
+                    <Input {...field} placeholder="John Doe" id="displayName" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -117,6 +117,7 @@ export function EditProfileDialog({
                       {...field}
                       placeholder="Tell us a little bit about yourself"
                       className="resize-none"
+                      id="bio"
                     />
                   </FormControl>
                   <FormMessage />
@@ -176,6 +177,7 @@ function AvatarInput({ src, onImageCropped }: AvatarInputProps) {
       <input
         type="file"
         accept="image/*"
+        name="user-avatar-input"
         onChange={(e) => onImageSelected(e.target.files?.[0])}
         ref={fileInputRef}
         className="sr-only hidden"
