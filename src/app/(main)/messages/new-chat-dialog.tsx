@@ -45,8 +45,7 @@ export function NewChatDialog({
       queryFn: async () =>
         client.queryUsers(
           {
-            id: { $ne: loggedInUser.id },
-            role: { $ne: "admin" },
+            role: { $in: ["user"] },
             ...(searchInputDebounced
               ? {
                   $or: [
@@ -65,12 +64,6 @@ export function NewChatDialog({
     mutationFn: async () => {
       const channel = client.channel("messaging", {
         members: [loggedInUser.id, ...selectedUsers.map((su) => su.id)],
-        name:
-          selectedUsers.length > 1
-            ? loggedInUser.displayName +
-              ", " +
-              selectedUsers.map((su) => su.name).join(", ")
-            : undefined,
       });
 
       await channel.create();
@@ -132,20 +125,22 @@ export function NewChatDialog({
           <hr />
           <div className="h-96 overflow-y-auto">
             {isSuccess && data.users.length > 0 ? (
-              data.users.map((user) => (
-                <UserResult
-                  key={user.id}
-                  user={user}
-                  selected={selectedUsers.some((su) => su.id === user.id)}
-                  onClick={() => {
-                    setSelectedUsers((prev) =>
-                      prev.some((pu) => pu.id === user.id)
-                        ? prev.filter((pu) => pu.id !== user.id)
-                        : [...prev, user],
-                    );
-                  }}
-                />
-              ))
+              data.users
+                .filter((user) => user.id !== loggedInUser.id)
+                .map((user) => (
+                  <UserResult
+                    key={user.id}
+                    user={user}
+                    selected={selectedUsers.some((su) => su.id === user.id)}
+                    onClick={() => {
+                      setSelectedUsers((prev) =>
+                        prev.some((pu) => pu.id === user.id)
+                          ? prev.filter((pu) => pu.id !== user.id)
+                          : [...prev, user],
+                      );
+                    }}
+                  />
+                ))
             ) : isFetching || isPending || isLoading ? (
               <Loader2 className="animate-spin p-4 text-center" />
             ) : isError ? (
