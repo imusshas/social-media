@@ -1,3 +1,4 @@
+import { GoogleSignInButton } from "@/app/(auth)/login/google/google-sign-in-button";
 import { LoginForm } from "@/app/(auth)/login/login-form";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -20,6 +21,12 @@ export default function Login() {
           A place to connect with <span className="italic">friends</span>
         </p>
         <LoginForm />
+        <div className="text-muted-foreground flex items-center gap-2">
+          <hr className="flex-1" />
+          or
+          <hr className="flex-1" />
+        </div>
+        <GoogleSignInButton />
         <p>
           Do not have an account?{" "}
           <Link href="/signup" replace className="text-muted-foreground">

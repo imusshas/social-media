@@ -41,7 +41,7 @@ export function LoginForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="my-6 space-y-3 text-start"
+        className="mt-6 space-y-3 text-start"
       >
         <FormField
           control={form.control}
