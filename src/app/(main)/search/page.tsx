@@ -3,20 +3,22 @@ import { SearchResults } from "@/app/api/search/search-results";
 import { Metadata } from "next";
 
 type SearchProps = {
-  searchParams: {
+  searchParams: Promise<{
     q: string;
-  };
+  }>;
 };
 
-export function generateMetadata({
-  searchParams: { q },
-}: SearchProps): Metadata {
+export async function generateMetadata({
+  searchParams,
+}: SearchProps): Promise<Metadata> {
+  const { q } = await searchParams;
   return {
     title: `Search results for "${q}"`,
   };
 }
 
-export default function Search({ searchParams: { q } }: SearchProps) {
+export default async function Search({ searchParams }: SearchProps) {
+  const { q } = await searchParams;
   return (
     <section className="flex w-full min-w-0 gap-5">
       <div className="w-full min-w-0 space-y-5">
